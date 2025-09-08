@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Info, Trash, Plus, FileText } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea"
 import ChevronToggle from "@/components/ui/chevron-toggle";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -18,6 +19,16 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: "Rencana Strategis", href: "#" },
@@ -61,9 +72,40 @@ export default function RencanaStrategis() {
                         type="text"
                         placeholder="Cari Main Program/Sasaran Strategis/IKU/Indikator/Penanggung Jawab"
                     />
-                    <Link href="rencana-strategis-kampus/rencana-strategis-indikator/create">
-                        <Button><Plus /> Tambah Indikator</Button>
-                    </Link>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button><Plus />Tambah Indikator</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader><DialogTitle>Form Indikator</DialogTitle></DialogHeader>
+                            <Label>Main Program</Label>
+                            <Input />
+                            <Label>Indikator</Label>
+                            <Textarea />
+                            <Label>Bidang</Label>
+                            <Input
+                            />
+                            <Label>Tipe Data</Label>
+                            <Select>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Pilih" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="1">Angka</SelectItem>
+                                        <SelectItem value="2">Persentase</SelectItem>
+                                        <SelectItem value="3">Rasio</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <Button variant="outline">Batal</Button>
+                                </DialogClose>
+                                <Button type="submit">Simpan</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </div>
                 <table>
                     <thead>
