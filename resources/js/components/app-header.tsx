@@ -26,6 +26,11 @@ const mainNavItems: NavItem[] = [
         url: '/rencana-strategis',
         icon: List,
     },
+    {
+        title: 'Dummy Rencana Strategis',
+        url: '/dummy-rencana-strategis',
+        icon: List,
+    },
 ];
 
 const rightNavItems: NavItem[] = [

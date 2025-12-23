@@ -1,112 +1,96 @@
-import React, { useState } from "react";
-import AppLayout from "@/layouts/app-layout";
-import { type BreadcrumbItem } from "@/types";
-import { Head, Link } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import { Pencil, Info, Trash, Plus, FileText } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea"
-import ChevronToggle from "@/components/ui/chevron-toggle";
-import { Badge } from "@/components/ui/badge";
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+import React, { useState, useEffect } from "react"
+import AppLayout from "@/layouts/app-layout"
+import { type BreadcrumbItem } from "@/types"
+import { Head, usePage } from "@inertiajs/react"
+import { Button } from "@/components/ui/button"
+import { Pencil, Info, Trash, Plus, FileText, Download, Printer } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Badge } from "@/components/ui/badge"
+import { useFlashAlert } from "@/hooks/useFlashAlert";
+import FormIndikator from "./form-indikator"
+import OpsiIndikator from "./opsi-indikator"
+import FormTambahTarget from "./form-tambah-detail"
+import FormIsiCapaian from "./form-update-detail"
+import OpsiDetail from "./opsi-detail"
+import { router } from "@inertiajs/react"
+import { Link } from "@inertiajs/react"
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: "Rencana Strategis", href: "#" },
-];
+]
 
-const kelompokKeahlian = [
-    {
-        id: 1,
-        main_program: "Invest In People",
-        indikator: "Jumlah prodi terakreditasi Unggul / A",
-        bidang: "DIR TUP",
-        tipe_data: "Angka",
-        detail: [
-            { id: 1, tahun: "2024", target: 2, capaian: 1, status: "50%", dokumen: "link_dokumen_2024.pdf" },
-            { id: 2, tahun: "2025", target: 4, capaian: 6, status: "150%", dokumen: "" },
-        ],
-    },
-    {
-        id: 2,
-        main_program: "Digital transformation",
-        indikator: "Penerapan TUNC Intelligent Campus (LMS, iGracias, TUP dosen dan staf, Satu Data dan Analytic",
-        bidang: "WADIR I TUP, PRODI TUP",
-        tipe_data: "Persentase",
-        detail: [
-            { id: 1, tahun: "2024", target: "20%", capaian: "-", status: "-", dokumen: "publikasi2024.pdf" },
-            { id: 2, tahun: "2025", target: "25%", capaian: "-", status: "-", dokumen: "" },
-        ],
-    },
-];
+//export default function RencanaStrategis({ DaftarIndikator = [] }: { DaftarIndikator?: any[] }) {
+export default function RencanaStrategis({ DaftarIndikator = [], filters }: { DaftarIndikator?: any[], filters?: any }) {
+    const [openRow, setOpenRow] = useState<number | null>(null)
+    const [editData, setEditData] = useState<any | null>(null)
+    const [openCreate, setOpenCreate] = useState(false)
+    const { flash } = usePage().props as any;
+    const { FlashAlert } = useFlashAlert(flash, 3000);
+    const [search, setSearch] = useState(filters?.search || "")
+    const [openTarget, setOpenTarget] = useState<number | null>(null)
 
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            router.get(route("rencana-strategis"), { search }, { preserveState: true, replace: true })
+        }, 500)
+        return () => clearTimeout(timeout)
+    }, [search])
 
-export default function RencanaStrategis() {
-    const [openRow, setOpenRow] = useState<number | null>(null);
+    const handlePrint = () => {
+        window.print()
+    }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Rencana Strategis" />
-            <div className="p-4">
-                <div className="flex justify-between items-center pb-4 gap-4">
+            {/* Print styles */}
+            <style>{`
+        @media print {
+          .no-print { display: none !important; }
+          .print-area { padding: 0 !important; }
+          table { width: 100%; border-collapse: collapse; }
+          th, td { border: 1px solid #000; padding: 6px; }
+          /* Sembunyikan kolom opsi saat print */
+          .kolom-opsi, th.kolom-opsi { display: none !important; }
+        }
+      `}</style>
+
+            <FlashAlert />
+            <div className="p-4 print-area">
+                <div className="flex justify-between items-center pb-4 gap-4 no-print">
                     <Input
                         type="text"
-                        placeholder="Cari Main Program/Sasaran Strategis/IKU/Indikator/Penanggung Jawab"
+                        placeholder="Pencarian . . ."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
                     />
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button><Plus />Tambah Indikator</Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader><DialogTitle>Form Indikator</DialogTitle></DialogHeader>
-                            <Label>Main Program</Label>
-                            <Input />
-                            <Label>Indikator</Label>
-                            <Textarea />
-                            <Label>Bidang</Label>
-                            <Input
-                            />
-                            <Label>Tipe Data</Label>
-                            <Select>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Pilih" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectItem value="1">Angka</SelectItem>
-                                        <SelectItem value="2">Persentase</SelectItem>
-                                        <SelectItem value="3">Rasio</SelectItem>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                            <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button variant="outline">Batal</Button>
-                                </DialogClose>
-                                <Button type="submit">Simpan</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+
+                    <div className="flex gap-2">
+                        <Dialog open={openCreate} onOpenChange={setOpenCreate}>
+                            <DialogTrigger asChild>
+                                <Button>
+                                    <Plus className="mr-2 h-4 w-4" />
+                                    Tambah Indikator
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <FormIndikator onSuccess={() => setOpenCreate(false)} />
+                            </DialogContent>
+                        </Dialog>
+                        <Link
+                            href={route("rencana-strategis.print", { search })}
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            <Button variant="outline" type="button" className="no-print">
+                                <Printer className="mr-2 h-4 w-4" />
+                                Cetak
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
+
                 <table>
                     <thead>
                         <tr>
@@ -114,84 +98,54 @@ export default function RencanaStrategis() {
                             <th>Main Program</th>
                             <th>Indikator</th>
                             <th>Bidang</th>
-                            <th>Tipe Data</th>
-                            <th></th>
+                            <th>Unit</th>
+                            <th className="kolom-opsi no-print"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {kelompokKeahlian.map((k) => (
+                        {DaftarIndikator.map((k, index) => (
                             <React.Fragment key={k.id}>
-                                {/* Row utama */}
                                 <tr
                                     className="cursor-pointer hover:text-red-500 border-b-2"
                                     onClick={() => setOpenRow(openRow === k.id ? null : k.id)}
                                 >
-                                    <td>{k.id}</td>
+                                    <td>{index + 1}</td>
                                     <td>{k.main_program}</td>
                                     <td>{k.indikator}</td>
                                     <td>{k.bidang}</td>
                                     <td>{k.tipe_data}</td>
-                                    <td className="kolom-opsi">
-                                        <Button variant="secondary"><Info /></Button>
-                                        <Link href="#edit">
-                                            <Button variant="secondary"><Pencil /></Button>
-                                        </Link>
-                                        <Dialog>
-                                            <DialogTrigger asChild>
-                                                <Button variant="secondary"><Trash /></Button>
-                                            </DialogTrigger>
-                                            <DialogContent>
-                                                <DialogHeader>
-                                                    <DialogTitle>Konfirmasi Hapus</DialogTitle>
-                                                </DialogHeader>
-                                                <DialogDescription>
-                                                    Apakah Anda yakin ingin menghapus <strong>{k.indikator} </strong> ?
-                                                </DialogDescription>
-                                                <DialogFooter>
-                                                    <DialogClose asChild>
-                                                        <Button variant="outline">Batal</Button>
-                                                    </DialogClose>
-                                                    <Button>Hapus</Button>
-                                                </DialogFooter>
-                                            </DialogContent>
-                                        </Dialog>
-                                        <ChevronToggle open={openRow === k.id} />
+                                    <td className="kolom-opsi no-print">
+                                        <OpsiIndikator
+                                            indikator={k}
+                                            openRow={openRow}
+                                            setOpenRow={setOpenRow}
+                                            editData={editData}
+                                            setEditData={setEditData}
+                                        />
                                     </td>
-
                                 </tr>
 
-                                {/* Row detail collapse */}
                                 {openRow === k.id && (
                                     <tr className="table-detail">
                                         <td colSpan={6}>
-                                            <div className="pb-2">
-                                                <Dialog>
-                                                    <form>
-                                                        <DialogTrigger asChild>
-                                                            <Button><Plus />Tambah Target</Button>
-                                                        </DialogTrigger>
-                                                        <DialogContent>
-                                                            <DialogHeader>
-                                                                <DialogTitle>Tambah Target</DialogTitle>
-                                                            </DialogHeader>
-                                                            <Label>Tahun</Label>
-                                                            <Input
-                                                                type="number"
-                                                            />
-                                                            <Label>Target</Label>
-                                                            <Input
-                                                            />
-                                                            <DialogFooter>
-                                                                <DialogClose asChild>
-                                                                    <Button variant="outline">Batal</Button>
-                                                                </DialogClose>
-                                                                <Button type="submit">Simpan</Button>
-                                                            </DialogFooter>
-                                                        </DialogContent>
-                                                    </form>
+                                            <div className="pb-2 no-print">
+                                                {/* Tambah Target */}
+                                                <Dialog open={openTarget === k.id} onOpenChange={(o) => setOpenTarget(o ? k.id : null)}>
+                                                    <DialogTrigger asChild>
+                                                        <Button>
+                                                            <Plus className="mr-2 h-4 w-4" /> Tambah Target
+                                                        </Button>
+                                                    </DialogTrigger>
+                                                    <DialogContent>
+                                                        <DialogHeader>
+                                                            <DialogTitle>Tambah Target</DialogTitle>
+                                                        </DialogHeader>
+                                                        <FormTambahTarget indikatorId={k.id} onSuccess={() => setOpenTarget(null)} />
+                                                    </DialogContent>
                                                 </Dialog>
                                             </div>
-                                            {k.indikator.length > 0 ? (
+
+                                            {k.detail && k.detail.length > 0 ? (
                                                 <table>
                                                     <thead>
                                                         <tr>
@@ -199,74 +153,50 @@ export default function RencanaStrategis() {
                                                             <th>Target</th>
                                                             <th>Capaian</th>
                                                             <th>Status</th>
-                                                            <th>Dokumen</th>
-                                                            <th></th>
+                                                            <th className="kolom-opsi no-print"></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {k.detail.map((item, i) => (
+                                                        {k.detail.map((item: any) => (
                                                             <tr key={item.id}>
                                                                 <td>{item.tahun}</td>
                                                                 <td>{item.target}</td>
                                                                 <td>{item.capaian}</td>
                                                                 <td><Badge>{item.status}</Badge></td>
-                                                                <td>{item.dokumen}</td>
-                                                                <td className="kolom-opsi">
-                                                                    <Dialog>
-                                                                        <form>
+                                                                <td className="flex gap-2 kolom-opsi no-print">
+                                                                    {item.nama_dokumen ? (
+                                                                        // Kalau sudah ada dokumen → tombol unduh
+                                                                        <Button asChild>
+                                                                            <a href={route("detail.download", item.id)}>
+                                                                                <Download />
+                                                                            </a>
+                                                                        </Button>
+                                                                    ) : (
+                                                                        // Kalau belum ada dokumen → tampilkan form isi capaian
+                                                                        <Dialog>
                                                                             <DialogTrigger asChild>
-                                                                                <Button><FileText />Isi Capaian</Button>
+                                                                                <Button>
+                                                                                    <FileText />
+                                                                                </Button>
                                                                             </DialogTrigger>
                                                                             <DialogContent>
                                                                                 <DialogHeader>
                                                                                     <DialogTitle>Isi Capaian</DialogTitle>
                                                                                 </DialogHeader>
-                                                                                <Label>Bukti Dokumen <p className="text-sm text-muted-foreground">Hanya dokumen .pdf yang diizinkan</p></Label>
-                                                                                <Input
-                                                                                    type="file"
-                                                                                    accept="application/pdf"
-                                                                                />
-                                                                                <Label>Capaian</Label>
-                                                                                <Input
-                                                                                />
-                                                                                <DialogFooter>
-                                                                                    <DialogClose asChild>
-                                                                                        <Button variant="outline">Batal</Button>
-                                                                                    </DialogClose>
-                                                                                    <Button type="submit">Simpan</Button>
-                                                                                </DialogFooter>
+                                                                                <FormIsiCapaian detailId={item.id} />
                                                                             </DialogContent>
-                                                                        </form>
-                                                                    </Dialog>
-                                                                    <Dialog>
-                                                                        <DialogTrigger asChild>
-                                                                            <Button variant="secondary"><Trash /></Button>
-                                                                        </DialogTrigger>
-                                                                        <DialogContent>
-                                                                            <DialogHeader>
-                                                                                <DialogTitle>Konfirmasi Hapus</DialogTitle>
-                                                                            </DialogHeader>
-                                                                            <DialogDescription>
-                                                                                Apakah Anda yakin ingin menghapus <strong>{k.indikator} tahun {item.tahun} </strong> ?
-                                                                            </DialogDescription>
-                                                                            <DialogFooter>
-                                                                                <DialogClose asChild>
-                                                                                    <Button variant="outline">Batal</Button>
-                                                                                </DialogClose>
-                                                                                <Button>Hapus</Button>
-                                                                            </DialogFooter>
-                                                                        </DialogContent>
-                                                                    </Dialog>
+                                                                        </Dialog>
+                                                                    )}
+                                                                    <OpsiDetail indikator={k} item={item} />
                                                                 </td>
                                                             </tr>
                                                         ))}
                                                     </tbody>
                                                 </table>
                                             ) : (
-                                                <p>Belum ada indikator.</p>
+                                                <p className="text-gray-500">Belum ada target.</p>
                                             )}
                                         </td>
-
                                     </tr>
                                 )}
                             </React.Fragment>
@@ -274,6 +204,6 @@ export default function RencanaStrategis() {
                     </tbody>
                 </table>
             </div>
-        </AppLayout >
-    );
+        </AppLayout>
+    )
 }

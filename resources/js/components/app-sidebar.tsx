@@ -4,12 +4,12 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { List, LayoutGrid } from 'lucide-react';
+import { List, LayoutGrid, Settings, ListCheck, LogOut } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboarad',
+        title: 'Dashboard',
         url: '/dashboard',
         icon: LayoutGrid,
     },
@@ -17,6 +17,21 @@ const mainNavItems: NavItem[] = [
         title: 'Rencana Strategis',
         url: '/rencana-strategis',
         icon: List,
+    },
+    {
+        title: 'Kontrak Manajemen',
+        url: '/dummy-rencana-strategis',
+        icon: ListCheck,
+    },
+    {
+        title: 'Pengaturan',
+        url: '/settings/appearance',
+        icon: Settings,
+    },
+    {
+        title: 'Log Out',
+        url: '/logout',
+        icon: LogOut,
     },
 ];
 

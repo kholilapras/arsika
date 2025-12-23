@@ -12,10 +12,11 @@ Route::middleware(['auth'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-    Route::get('rencana-strategis', function () {
-        return Inertia::render('rencana-strategis/index');
-    })->name('rencana-strategis');
+    Route::get('dummy-rencana-strategis', function () {
+        return Inertia::render('dummy/dummy-rencana-strategis');
+    })->name('dummy-rencana-strategis');
 });
 
+require __DIR__ . '/rencana-strategis.php';
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
