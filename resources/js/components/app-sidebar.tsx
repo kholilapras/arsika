@@ -7,6 +7,7 @@ import { Link } from '@inertiajs/react';
 import { List, LayoutGrid, Settings, ListCheck, LogOut } from 'lucide-react';
 import AppLogo from './app-logo';
 
+
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
@@ -20,7 +21,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Kontrak Manajemen',
-        url: '/dummy-rencana-strategis',
+        url: '/kontrak-manajemen',
         icon: ListCheck,
     },
     {
@@ -30,8 +31,9 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Log Out',
-        url: '/logout',
+        url: route('logout'),
         icon: LogOut,
+        method: 'post',
     },
 ];
 

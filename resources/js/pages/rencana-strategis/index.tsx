@@ -165,14 +165,14 @@ export default function RencanaStrategis({ DaftarIndikator = [], filters }: { Da
                                                                 <td><Badge>{item.status}</Badge></td>
                                                                 <td className="flex gap-2 kolom-opsi no-print">
                                                                     {item.nama_dokumen ? (
-                                                                        // Kalau sudah ada dokumen → tombol unduh
+                                                                        // jika ada dokumen > tombol unduh
                                                                         <Button asChild>
                                                                             <a href={route("detail.download", item.id)}>
                                                                                 <Download />
                                                                             </a>
                                                                         </Button>
                                                                     ) : (
-                                                                        // Kalau belum ada dokumen → tampilkan form isi capaian
+                                                                        // jika belum ada dokumen > tampilkan form isi capaian
                                                                         <Dialog>
                                                                             <DialogTrigger asChild>
                                                                                 <Button>

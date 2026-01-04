@@ -19,6 +19,7 @@ export interface NavItem {
     url: string;
     icon?: LucideIcon | null;
     isActive?: boolean;
+    method?: 'get' | 'post' | 'put' | 'patch' | 'delete';
 }
 
 export interface SharedData {
