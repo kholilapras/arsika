@@ -27,15 +27,10 @@ class ResponsibilityController extends Controller
         ]);
     }
 
-    /**
-     * ✅ Page khusus print (tab baru)
-     * Render ke: resources/js/pages/kontrak-manajemen/print.tsx
-     */
     public function print(Request $request)
     {
         [$q, $tahun] = $this->getFilters($request);
 
-        // Untuk print, timestamp biasanya tidak dibutuhkan (payload lebih ringan)
         $responsibilities = $this->getResponsibilities($q, $tahun, includeTimestamps: false);
 
         return Inertia::render('kontrak-manajemen/print', [
@@ -136,7 +131,6 @@ class ResponsibilityController extends Controller
                 $query->where('tahun_km', $tahun);
             })
             ->with(['details' => function ($q) {
-                // ✅ urut TW 1-4 (aman untuk string TW 1..4)
                 $q->orderByRaw("
                     CASE
                         WHEN tw_km = 'TW 1' THEN 1
@@ -147,7 +141,6 @@ class ResponsibilityController extends Controller
                     END
                 ");
             }])
-            // urutkan yang terbaru di atas (lebih natural daripada hanya id)
             ->orderByDesc('tahun_km')
             ->orderByDesc('id');
 
@@ -169,7 +162,6 @@ class ResponsibilityController extends Controller
                             'realisasi_km' => $d->realisasi_km,
                             'nama_dokumen_km' => $d->nama_dokumen_km,
                             'url_dokumen_km' => $d->url_dokumen_km,
-                            // kalau kolom status memang ada di tabel details, ini berguna buat badge di frontend
                             'status' => $d->status ?? null,
                         ];
 

@@ -14,7 +14,7 @@ import {
 
 type Props = {
     responsibilityId?: number | string
-    detail?: any // kalau ada -> mode edit
+    detail?: any
     onSuccess?: () => void
 }
 
@@ -28,7 +28,6 @@ export default function FormTambahDetail({ responsibilityId, detail, onSuccess }
         target_km: detail?.target_km ?? detail?.target ?? "",
     })
 
-    // ✅ pastikan FK selalu terisi saat mode tambah
     useEffect(() => {
         if (!isEdit) {
             setData("km_responsibility_id", responsibilityId ?? "")

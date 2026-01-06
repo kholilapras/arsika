@@ -6,13 +6,13 @@ use App\Http\Controllers\KontrakManajemen\DetailController;
 
 Route::middleware(['auth'])->group(function () {
 
-    // page utama index
+    // index
     Route::get('kontrak-manajemen', [ResponsibilityController::class, 'index'])
         ->name('kontrak-manajemen');
 
     Route::prefix('kontrak-manajemen')->name('kontrak-manajemen.')->group(function () {
 
-        // page print
+        // print
         Route::get('print', [ResponsibilityController::class, 'print'])
             ->name('print');
 

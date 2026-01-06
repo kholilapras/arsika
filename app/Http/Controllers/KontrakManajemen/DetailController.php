@@ -18,7 +18,6 @@ class DetailController extends Controller
             'target_km' => ['required', 'string', 'max:255'],
         ]);
 
-        // kolom realisasi_km tidak nullable (sesuai migration), isi default
         $validated['realisasi_km'] = '';
 
         Detail::create($validated);
@@ -28,9 +27,6 @@ class DetailController extends Controller
 
     public function update(Request $request, Detail $detail)
     {
-        // Dipakai untuk:
-        // 1) Edit detail (tw, bobot, target)
-        // 2) Isi realisasi + upload dokumen PDF (max 20MB)
         $validated = $request->validate(
             [
                 'tw_km' => ['sometimes', 'required', 'string', 'max:20'],
@@ -38,7 +34,6 @@ class DetailController extends Controller
                 'target_km' => ['sometimes', 'required', 'string', 'max:255'],
                 'realisasi_km' => ['sometimes', 'required', 'string', 'max:255'],
 
-                // ✅ PDF only, max 20MB (20480 KB)
                 'dokumen' => ['nullable', 'file', 'mimes:pdf', 'max:20480'],
             ],
             [
@@ -47,14 +42,12 @@ class DetailController extends Controller
             ]
         );
 
-        // update field text kalau ada
         foreach (['tw_km', 'bobot_km', 'target_km', 'realisasi_km'] as $field) {
             if (array_key_exists($field, $validated)) {
                 $detail->{$field} = $validated[$field];
             }
         }
 
-        // upload dokumen PDF
         if ($request->hasFile('dokumen')) {
             $disk = Storage::disk('public');
 
@@ -65,7 +58,6 @@ class DetailController extends Controller
 
             $file = $request->file('dokumen');
 
-            // simpan ke storage/app/public/kontrak-manajemen/km-detail
             $path = $file->store('kontrak-manajemen/km-detail', 'public');
 
             $detail->nama_dokumen_km = $file->getClientOriginalName();

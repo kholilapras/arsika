@@ -18,13 +18,6 @@ class Responsibility extends Model
         'tahun_km',
     ];
 
-    // public function details(): HasMany
-    // {
-    //     // FK = renstra_indikator_id, PK lokal = id
-    //     return $this->hasMany(Detail::class, 'renstra_indikator_id', 'id')
-    //         ->orderBy('tahun');
-    // }
-
     public function details(): HasMany
     {
         return $this->hasMany(Detail::class, 'km_responsibility_id', 'id')

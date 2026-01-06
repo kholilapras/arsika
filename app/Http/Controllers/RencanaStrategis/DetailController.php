@@ -33,7 +33,7 @@ class DetailController extends Controller
             'dokumen' => 'nullable|file|mimes:pdf|max:20480',
         ]);
 
-        Log::info("✅ Data tervalidasi:", $validated);
+        Log::info("Data tervalidasi:", $validated);
 
         $detail = Detail::findOrFail($id);
 
@@ -114,7 +114,7 @@ class DetailController extends Controller
             return back()->with('error', 'Dokumen tidak ditemukan');
         }
 
-        // Dapatkan absolute path di disk 'public'
+        // get absolute path disk public
         $absolutePath = Storage::disk('public')->path($detail->url_dokumen);
 
         return response()->download($absolutePath, $detail->nama_dokumen);

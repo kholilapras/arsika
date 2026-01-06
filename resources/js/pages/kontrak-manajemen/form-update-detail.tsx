@@ -25,10 +25,9 @@ export default function FormIsiRealisasi({ detailId, detail, onSuccess }: Props)
     const submit = (e: React.FormEvent) => {
         e.preventDefault()
 
-        // ✅ route sesuai route:list
         post(route("kontrak-manajemen.detail.update", detailId), {
             preserveScroll: true,
-            forceFormData: true, // ✅ biar file terkirim
+            forceFormData: true,
             onSuccess: () => {
                 reset("dokumen")
                 onSuccess?.()

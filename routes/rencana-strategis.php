@@ -21,7 +21,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/rencana-strategis/print', [IndikatorController::class, 'print'])->name('rencana-strategis.print');
 
-    // Rute Detail
+    //Detail
     Route::post('detail', [DetailController::class, 'store'])
         ->name('detail.store');
 

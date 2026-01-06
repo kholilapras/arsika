@@ -14,7 +14,6 @@ class IndikatorController extends Controller
         $search = $request->input('search');
 
         $indikator = Indikator::query()
-            // eager load details + urutkan tahun ASC
             ->with(['details' => function ($q) {
                 $q->orderBy('tahun', 'asc');
             }])
@@ -27,7 +26,6 @@ class IndikatorController extends Controller
                         ->orWhere('tipe_data',    'like', "%{$search}%");
                 });
             })
-            // urutan ASC: main_program → indikator → bidang → tipe_data (unit)
             ->orderBy('main_program', 'asc')
             ->orderBy('indikator', 'asc')
             ->orderBy('bidang', 'asc')
